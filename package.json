@@ -1,0 +1,23 @@
+{
+  "name": "notes-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Coby-Burckard/notes-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Coby-Burckard/notes-app/issues"
+  },
+  "homepage": "https://github.com/Coby-Burckard/notes-app#readme",
+  "dependencies": {
+    "mongodb": "^3.6.3"
+  }
+}
