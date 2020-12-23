@@ -34,33 +34,46 @@ const User = mongoose.model('User', {
         throw new Error('email is invalid')
       }
     }
+  },
+  password: {
+    type: String,
+    required: true,
+    trim: true,
+    validate(value) {
+      if (value.length < 7 || value.toLowerCase().includes('password')) {
+        throw new Error('invalid password')
+      }
+    }
   }
 })
 
 const Task = mongoose.model('Task', {
   description: {
-    type: String
+    type: String,
+    trim: true,
+    required: true
   },
   complete: {
-    type: Boolean
+    type: Boolean,
+    required: false,
+    default: false
   }
 })
 
-// const me = new User({
-//   name: 'Coby',
-//   age: '25tsdf'
-// })
+const me = new User({
+  name: 'Violet',
+  age: 25,
+  password: 'normalPass',
+  email: 'v@arasaka.com'
+})
 
 const you = new User({ name: '  bob    ', email: '   mike@yahoo.com   ' })
 
 
-const dishes = new Task({
-  description: 'do the dishes',
-  complete: false
-})
+const groceries = new Task({})
 
 const saveDocument = (document) => {
   document.save().then(result => console.log(result)).catch(error => console.log(error))
 }
 
-saveDocument(you)
+saveDocument(groceries)
