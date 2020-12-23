@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/Coby-Burckard/notes-app#readme",
   "dependencies": {
-    "mongodb": "^3.6.3"
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.8",
+    "validator": "^13.5.2"
   }
 }
