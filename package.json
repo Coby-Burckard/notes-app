@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "",
+    "start-db": "C:\\Users\\cobyb\\mongodb\\bin\\mongod.exe --dbpath=/users/cobyb/mongodb-data",
+    "dev": "nodemon src/index.js"
   },
   "repository": {
     "type": "git",
@@ -18,8 +20,12 @@
   },
   "homepage": "https://github.com/Coby-Burckard/notes-app#readme",
   "dependencies": {
+    "express": "^4.17.1",
     "mongodb": "^3.6.3",
     "mongoose": "^5.11.8",
     "validator": "^13.5.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
   }
 }
