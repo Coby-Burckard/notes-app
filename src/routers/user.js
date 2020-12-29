@@ -16,6 +16,16 @@ app.post('/users', async (req, res) => {
   }
 })
 
+app.post('/users/login', async (req, res) => {
+  try {
+    const { email, password } = req.body
+    const user = await User.findByCredentials(email, password)
+    res.send(user)
+  } catch (e) {
+    res.status(400).send()
+  }
+})
+
 
 app.get('/users', async (req, res) => {
   try {
