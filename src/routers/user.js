@@ -1,16 +1,17 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const User = require('../models/user')
+const auth = require('../middleware/auth')
 
 const app = new express.Router()
 
 //Users
 app.post('/users', async (req, res) => {
-  const user = new User(req.body)
-
   try {
+    const user = new User(req.body)
+    const token = await user.generateAuthToken()
     await user.save()
-    res.status(201).send(user)
+    res.status(201).send({ user, token })
   } catch (e) {
     res.status(400).send(e)
   }
@@ -20,23 +21,19 @@ app.post('/users/login', async (req, res) => {
   try {
     const { email, password } = req.body
     const user = await User.findByCredentials(email, password)
-    res.send(user)
+    const token = await user.generateAuthToken()
+    res.send({ user, token })
   } catch (e) {
     res.status(400).send()
   }
 })
 
 
-app.get('/users', async (req, res) => {
-  try {
-    const result = await User.find()
-    res.send(result)
-  } catch (e) {
-    res.status(500).send(e)
-  }
+app.get('/users/me', auth, async (req, res) => {
+  res.send(req.user)
 })
 
-app.get('/users/:id', async (req, res) => {
+app.get('/users/:id', auth, async (req, res) => {
   const _id = req.params.id
 
   try {
@@ -50,7 +47,7 @@ app.get('/users/:id', async (req, res) => {
   }
 })
 
-app.patch('/users/:id', async (req, res) => {
+app.patch('/users/:id', auth, async (req, res) => {
   //only certain fields can be updated
   const allowedUpdates = ['name', 'email', 'password', 'age']
   const updates = Object.keys(req.body)
@@ -76,7 +73,7 @@ app.patch('/users/:id', async (req, res) => {
   }
 })
 
-app.delete('/users/:id', async (req, res) => {
+app.delete('/users/:id', auth, async (req, res) => {
 
   try {
     const user = await User.findByIdAndDelete(req.params.id)

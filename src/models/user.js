@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 const crypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const validator = require('validator')
 
 const userSchema = new mongoose.Schema({
   age: {
@@ -39,10 +40,16 @@ const userSchema = new mongoose.Schema({
         throw new Error('invalid password')
       }
     }
-  }
+  },
+  tokens: [{
+    token: {
+      type: String,
+      required: true
+    }
+  }]
 })
 
-//Custom functions
+//Custom static methods
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email })
 
@@ -57,6 +64,18 @@ userSchema.statics.findByCredentials = async (email, password) => {
   }
 
   return user
+}
+
+//Custom instance methods
+userSchema.methods.generateAuthToken = async function () {
+  const user = this
+  const token = jwt.sign({ _id: user._id.toString() }, 'abc123')
+
+  //adding token to user
+  user.tokens = user.tokens.concat({ token })
+  await user.save()
+
+  return token
 }
 
 //Hash plain text password before saving
