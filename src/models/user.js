@@ -78,6 +78,15 @@ userSchema.methods.generateAuthToken = async function () {
   return token
 }
 
+userSchema.methods.toJSON = function () {
+  const userObject = this.toObject()
+  console.log(userObject)
+  delete userObject.password
+  delete userObject.tokens
+
+  return userObject
+}
+
 //Hash plain text password before saving
 userSchema.pre('save', async function (next) {
   const user = this
