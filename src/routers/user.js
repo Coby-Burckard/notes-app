@@ -52,21 +52,7 @@ app.get('/users/me', auth, async (req, res) => {
   res.send(req.user)
 })
 
-app.get('/users/:id', auth, async (req, res) => {
-  const _id = req.params.id
-
-  try {
-    const user = await User.findById(_id)
-    if (!user) {
-      return res.status(404).send('unable to find user')
-    }
-    res.send(user)
-  } catch (e) {
-    res.status(500).send('unable to find user')
-  }
-})
-
-app.patch('/users/:id', auth, async (req, res) => {
+app.patch('/users/me', auth, async (req, res) => {
   //only certain fields can be updated
   const allowedUpdates = ['name', 'email', 'password', 'age']
   const updates = Object.keys(req.body)
@@ -77,29 +63,21 @@ app.patch('/users/:id', auth, async (req, res) => {
 
   //updating user
   try {
-    const user = await User.findById(req.params.id)
-    updates.forEach(update => user[update] = req.body[update])
+    updates.forEach(update => req.user[update] = req.body[update])
 
-    await user.save()
+    await req.user.save()
 
-    if (!user) {
-      return res.status(404).send()
-    }
-
-    res.send(user)
+    res.send(req.user)
   } catch (e) {
     res.status(400).send(e)
   }
 })
 
-app.delete('/users/:id', auth, async (req, res) => {
+app.delete('/users/me', auth, async (req, res) => {
 
   try {
-    const user = await User.findByIdAndDelete(req.params.id)
-
-    if (!user) return res.status(404).send()
-
-    res.send(user)
+    await req.user.remove()
+    res.send(req.user)
   } catch (e) {
     res.status(500).send()
   }
